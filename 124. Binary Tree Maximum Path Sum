@@ -1,0 +1,25 @@
+// here the time complexity is O(n) and the space complexity is o(n)
+ // for each node there are four way we can find the max path
+//  either the the node only
+// including leftsum + the root
+// include right sum + the root
+// include both leftsum + root + rightSum
+class Solution {
+    int res ;
+    public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        res = Integer.MIN_VALUE;
+        findLargePathSum(root);
+        return res;
+    }
+    public  int findLargePathSum(TreeNode root){
+        if(root == null) return 0;
+        int l = findLargePathSum(root.left);
+        int r = findLargePathSum(root.right);
+
+        int maxSingle = Math.max(Math.max(l, r)+ root.val , root.val);
+        int maxTop = Math.max(maxSingle, l + r + root.val);
+        res = Math.max(maxTop, res);
+        return maxSingle;
+    }
+}
