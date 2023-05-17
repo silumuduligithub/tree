@@ -1,0 +1,21 @@
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        if(root == null)return true;
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(root);
+        boolean flag = false;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size -- > 0){
+                TreeNode rnode = que.remove();
+                if(rnode == null)flag = true;
+                else{
+                    if(flag)return false;
+                    que.add(rnode.left);
+                    que.add(rnode.right);
+                }
+            }
+        }
+        return true;
+    }
+}
