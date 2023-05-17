@@ -1,0 +1,17 @@
+class Solution {
+    public int[] HouseRobber(TreeNode root){
+        if(root == null)return new int[]{0, 0};
+        int[] left = HouseRobber(root.left);
+        int[] right= HouseRobber(root.right);
+        int[] res = new int[2];
+        // first if we include
+        res[0] = left[1] + root.val + right[1];
+        // if we exclude
+        res[1] = (Math.max(left[0], left[1]) + Math.max(right[0], right[1]));
+        return res;
+    }
+    public int rob(TreeNode root) {
+        int[]res = HouseRobber(root);
+        return Math.max(res[0], res[1]);
+    }
+}
