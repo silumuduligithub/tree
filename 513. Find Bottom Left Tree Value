@@ -1,0 +1,25 @@
+class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+       Queue<TreeNode> que = new LinkedList<>();
+       que.add(root);
+       int res = -1;
+       while(que.size() > 0){
+           int size = que.size();
+            int cur = size;
+          while(size > 0){
+               TreeNode rnode = que.remove();
+                if(size == cur){
+                    res = rnode.val;
+                }
+                if(rnode.left != null){
+                    que.add(rnode.left);
+                }
+                if(rnode.right != null){
+                    que.add(rnode.right);
+                }
+                size--;
+           }
+       } 
+       return res;
+    }
+}
