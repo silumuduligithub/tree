@@ -1,0 +1,27 @@
+class Solution {
+    public TreeNode reverseOddLevels(TreeNode root) {
+        Queue<TreeNode> que = new ArrayDeque<>();
+        que.add(root);
+        int level = 0;
+        while(que.size() > 0){
+            int size = que.size();
+            List<Integer> dp1 = new ArrayList<>();
+            List<TreeNode> dp2 = new ArrayList<>();
+            while(size-- > 0){
+                TreeNode cur = que.remove();
+                if(level % 2 != 0){
+                    dp1.add(cur.val);
+                    dp2.add(cur);
+                }
+                if(cur.left != null)que.add(cur.left);
+                if(cur.right != null)que.add(cur.right);
+            }
+            if(level % 2 != 0){
+                int k = dp1.size() - 1;
+                for(TreeNode node : dp2)node.val = dp1.get(k--);
+            }
+            level++;
+        }
+        return root;
+    }
+}
