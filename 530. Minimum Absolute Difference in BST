@@ -1,0 +1,39 @@
+// time complexity is O(n) and the space complexity is O(n)
+
+class Solution {
+    public void preDfs(TreeNode root, List<Integer> storage){
+        if(root == null)return;
+        preDfs(root.left, storage);
+        storage.add(root.val);
+        preDfs(root.right, storage);
+    }
+    public int getMinimumDifference(TreeNode root) {
+        if(root == null)return 0;
+        List<Integer> al = new ArrayList<>();
+        preDfs(root, al);
+        int ans = Integer.MAX_VALUE;
+        for(int i = 1; i < al.size(); i++){
+            ans = Math.min(ans, al.get(i) - al.get(i - 1));
+        }
+        return ans;
+    }
+}
+
+// timecomplexity is o(n) space complexity is O(1)
+class Solution {
+    int min = Integer.MAX_VALUE;
+    TreeNode prev = null;
+    public void preDfs(TreeNode root){
+        if(root == null)return;
+        preDfs(root.left);
+        if(prev != null){
+            min = Math.min(min, Math.abs(root.val - prev.val));
+        }
+        prev = root;
+        preDfs(root.right);
+    }
+    public int getMinimumDifference(TreeNode root) {
+        preDfs(root);
+        return min;
+    }
+}
