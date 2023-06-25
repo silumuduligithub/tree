@@ -1,0 +1,34 @@
+class Solution {
+    static class Pair{
+        int height;
+        boolean isBalanced;
+        Pair(){
+            height = 0;
+            isBalanced = true;
+        }
+        Pair(int height, boolean isBalanced){
+           this.height = height;
+           this.isBalanced = isBalanced; 
+        }
+    }
+    public static Pair isBalanced_(TreeNode root) {
+        if(root == null)return new Pair();
+        //check left
+        Pair leftSubtree = isBalanced_(root.left);
+        Pair rightSubtree = isBalanced_(root.right);
+
+        int diff = Math.abs(leftSubtree.height - rightSubtree.height);
+
+        if(diff > 1 || leftSubtree.isBalanced == false || rightSubtree.isBalanced == false )       {
+            return new Pair(Math.max(leftSubtree.height, rightSubtree.height)+1, leftSubtree.isBalanced = false);
+        }
+        else 
+            return new Pair(Math.max(leftSubtree.height, rightSubtree.height)+1, rightSubtree.isBalanced = true);
+
+    }
+    public static boolean isBalanced(TreeNode root)
+    {
+        Pair ans = isBalanced_(root);
+        return ans.isBalanced;
+    }
+}
