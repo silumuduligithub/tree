@@ -1,0 +1,21 @@
+// if a node is null, its indegree is 1 and outdegree is 1
+// if node is not null its indegree is 1, outdegree is 1
+// if indegree - outdegree == 1 then it is balanced tree and any time difference should not be greater than one 
+        //     1
+        //    / \
+        // null null
+// the preorder is "1##"
+// in this tree there is three indegre and two outdegree
+// for a valid tree our total indegree is one greater than to our out degree
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] str = preorder.split(",");
+        int indegree = 0, outdegree = 1;
+        for(String s : str){
+            indegree++;// either its node is null or not null the indegree is 1
+            if(outdegree - indegree < 0)return false;
+            if(!s.equals("#"))outdegree+= 2;
+        }
+        return  outdegree - indegree == 0;
+    }
+}
