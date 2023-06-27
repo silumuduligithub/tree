@@ -1,0 +1,61 @@
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if(root == null)return "";
+        Queue<TreeNode> que = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        que.add(root);
+        while(que.size() > 0){
+           TreeNode cur = que.remove();
+           if(cur == null)sb.append("#,");
+           else sb.append(cur.val+",");
+           if(cur != null){
+               que.add(cur.left);
+               que.add(cur.right);
+           }
+        }
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data.length() == 0)return null;
+        Queue<TreeNode> que = new LinkedList<>();
+        String[] str = data.split(",");
+        TreeNode root = new TreeNode(Integer.parseInt(str[0]));
+        que.add(root);
+        int i = 1;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                TreeNode cur = que.remove();
+                boolean flag1 = false;
+                boolean flag2 = false;
+                if(i < str.length && str[i].equals("#")){
+                    cur.left = null;
+                    flag1 = true;
+                    i++;
+                }
+                if(i < str.length && flag1 == false ){
+                    TreeNode left = new TreeNode(Integer.parseInt(str[i]));
+                    cur.left = left;
+                    que.add(left);
+                    i++;
+                }
+                if(i < str.length && str[i].equals("#")){
+                    cur.right = null;
+                    flag2 = true;
+                    i++;
+                }
+                if(i < str.length && flag2 == false){
+                    TreeNode right = new TreeNode(Integer.parseInt(str[i]));
+                    cur.right = right;
+                    i++;
+                    que.add(right);
+                }
+            }
+        }
+        return root;
+    }
+}
