@@ -1,0 +1,26 @@
+class Solution {
+    int lchild, rchild;
+    public int countNodes(TreeNode root, int x){
+        if(root == null)return 0;
+        int leftNodes = countNodes(root.left, x);
+        int rightNodes = countNodes(root.right, x);
+        if(root.val == x){
+            lchild = leftNodes;
+            rchild = rightNodes;
+            return 0;
+        }
+        return leftNodes + 1 + rightNodes;
+    }
+    public boolean btreeGameWinningMove(TreeNode root, int n, int x) {
+        lchild = 0; 
+        rchild = 0;
+        countNodes(root, x);
+        System.out.println(lchild + " "+ rchild);
+        int nodes = n - (lchild + rchild + 1);
+        int max =Math.max(nodes, Math.max(lchild, rchild));
+        return max > (n / 2);
+        // if(nodes > (lchild + rchild + 1))return true;
+        // else return false;
+        // we can not use this condition because if the x = root.val at that time the condition goes wrong
+    }
+}
