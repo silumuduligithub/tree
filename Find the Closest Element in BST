@@ -1,0 +1,27 @@
+class Solution
+{
+    //Function to find the least absolute difference between any node
+    //value of the BST and the given integer.
+    static int minDiff(Node  root, int K) 
+    { 
+        // Write your code here
+        if(root == null) return 0;
+        Queue<Node> que = new LinkedList<>();
+        que.add(root);
+        int temp = Integer.MAX_VALUE;
+        int count = 0, ans = 0;
+        while(que.size() > 0){
+            Node cur = que.remove();
+            int diff = Math.abs(K - cur.data);
+            if(diff < temp){
+                // System.out.println(cur.data);
+                temp = diff;
+                ans = diff;
+            }
+            if(cur.left != null)que.add(cur.left);
+            if(cur.right != null)que.add(cur.right);
+            count++;
+        }
+        return ans;
+    } 
+}
