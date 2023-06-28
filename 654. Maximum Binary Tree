@@ -1,0 +1,24 @@
+class Solution {
+    public int findMax(int[] nums, int idx1, int idx2){
+        int ans = -1, temp = Integer.MIN_VALUE;
+        for(int i = idx1; i <= idx2; i++){
+            if(nums[i] > temp){
+                temp = nums[i];
+                ans = i;
+            }
+        }
+        return ans;
+    }
+    public TreeNode construct(int[] nums, int start, int end){
+         if(start > end)return null;
+         if(start == end)return new TreeNode(nums[start]);
+        int idx = findMax(nums, start, end);
+        TreeNode root = new TreeNode(nums[idx]);
+        root.left = construct(nums, start, idx - 1);
+        root.right = construct(nums, idx + 1, end);
+        return root;
+    }
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return construct(nums, 0, nums.length - 1);
+    }
+}
