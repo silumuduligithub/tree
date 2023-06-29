@@ -1,0 +1,55 @@
+class Solution {
+    TreeNode startNode;
+    public TreeNode findNode(TreeNode root, int val){
+        if(root == null)return null;
+        if(root.val == val){
+            startNode = root;
+             return root;
+        }
+        findNode(root.left, val);
+        findNode(root.right, val);
+        return startNode;
+    }
+    public void generateParents(TreeNode root, HashMap<TreeNode, TreeNode> map){
+        if(root == null)return;
+        if(root.left != null)map.put(root.left, root);
+        if(root.right != null)map.put(root.right, root);
+        generateParents(root.left, map);
+        generateParents(root.right, map);
+    }
+    public int amountOfTime(TreeNode root, int start) {
+        startNode = null;
+        if(root == null)return 0;
+        HashMap<TreeNode, TreeNode> map = new HashMap<>();
+        Queue<TreeNode> que = new LinkedList<>();
+        Set<TreeNode> visited = new HashSet<>();
+        generateParents(root, map);
+        findNode(root, start);
+        if(startNode == null)return 0;
+        if(startNode != null){
+            que.add(startNode);
+            visited.add(startNode);
+        }
+        int count = 0;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                TreeNode front = que.remove();
+                if(front.left != null && visited.contains(front.left) == false){
+                    que.add(front.left);
+                    visited.add(front.left);
+                }
+                if(front.right != null && visited.contains(front.right) == false){
+                    que.add(front.right);
+                    visited.add(front.right);
+                }
+                if(map.getOrDefault(front, null) != null && visited.contains(map.get(front)) == false){
+                    que.add(map.get(front));
+                    visited.add(map.get(front));
+                }
+            }
+            count++;
+        }
+        return count - 1;
+    }
+}
