@@ -1,0 +1,21 @@
+class Solution {
+    public void findLeafNodes(TreeNode root, List<Integer> al){
+        if(root == null)return;
+        findLeafNodes(root.left, al);
+        findLeafNodes(root.right, al);
+        if(root.left == null && root.right == null){
+            al.add(root.val);
+        }
+    }
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        List<Integer> left = new ArrayList<>();
+        List<Integer> right = new ArrayList<>();
+        findLeafNodes(root1, left);
+        findLeafNodes(root2, right);
+        if(left.size() != right.size())return false;
+        for(int i = 0; i < left.size(); i++){
+            if(left.get(i) != right.get(i))return false;
+        }
+        return true;
+    }
+}
