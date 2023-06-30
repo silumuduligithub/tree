@@ -1,0 +1,23 @@
+class Solution { 
+    List<StringBuilder> sbs;
+    public StringBuilder dfs(TreeNode root, StringBuilder storage){
+        if(root == null)return null;
+        storage.append((char)(97 + root.val));
+        if(root.left == null && root.right == null){
+            StringBuilder sb = new StringBuilder(storage);
+            sbs.add(new StringBuilder(sb.reverse()));
+       }
+        dfs(root.left, storage);
+        dfs(root.right, storage);
+        storage.deleteCharAt(storage.length() - 1);
+        return storage;
+    }
+    public String smallestFromLeaf(TreeNode root) {
+        if(root == null)return "";
+        sbs = new ArrayList<>();
+        dfs(root, new StringBuilder(""));
+        Collections.sort(sbs);
+        System.out.println(sbs);
+        return sbs.get(0).toString();
+    }
+}
