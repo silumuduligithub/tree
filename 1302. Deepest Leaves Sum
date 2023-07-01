@@ -1,0 +1,24 @@
+class Solution {
+    public int depest(TreeNode root){
+        if(root == null)return 0;
+        int left = depest(root.left);
+        int right = depest(root.right);
+        return Math.max(left, right) + 1;
+    }
+    int sum = 0;
+    public void findSum(TreeNode root, int cur, int depth){
+        if(root == null)return;
+        if(cur == depth){
+            sum += root.val;
+            return;
+        }
+        findSum(root.left, cur + 1, depth);
+        findSum(root.right, cur + 1, depth);
+    }
+    public int deepestLeavesSum(TreeNode root) {
+        if(root == null)return 0;
+        int depth = depest(root);
+        findSum(root, 0, depth - 1);
+        return sum;
+    }
+}
