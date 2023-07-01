@@ -1,0 +1,18 @@
+class Solution {
+    TreeNode ans;
+    public void getCopy(final TreeNode original, final TreeNode cloned, final TreeNode target){
+        if(original == null)return;
+        if(target == original){
+            ans = cloned;
+            System.out.println(ans.val);
+            return;
+        }
+        getTargetCopy(original.left, cloned.left, target);
+        getTargetCopy(original.right, cloned.right, target);
+    }
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        if(original == null || cloned == null)return null;
+        getCopy(original, cloned, target);
+        return ans;
+    }
+}
