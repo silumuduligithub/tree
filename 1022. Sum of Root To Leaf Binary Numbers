@@ -1,0 +1,29 @@
+class Solution {
+    int ans = 0;
+    public int convertBinaryToDecimal(String str){
+        int sum = 0;
+        for(int i = str.length() - 1; i >= 0; i--){
+            int val = Integer.parseInt(str.charAt(i)+"");
+            if(val == 1){
+                int val1 = (int)Math.pow(2, str.length() - i - 1);
+                sum += val1;
+            }
+        }
+        return sum;
+    }
+    public void dfs(TreeNode root, String str){
+        if(root == null){
+            return;
+        }
+        if(root.left == null && root.right == null){
+            int sum = convertBinaryToDecimal(str + root.val);
+            ans += sum;
+        }
+        dfs(root.left, str + root.val);
+        dfs(root.right, str + root.val);
+    }
+    public int sumRootToLeaf(TreeNode root) {
+        dfs(root, "");
+        return ans;
+    }
+}
