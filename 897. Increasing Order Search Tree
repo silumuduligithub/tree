@@ -1,0 +1,15 @@
+class Solution {
+    TreeNode head = new TreeNode(0);
+    TreeNode temp = head;
+    public void dfs(TreeNode root){
+        if(root == null)return;
+        dfs(root.left);
+        temp.right = new TreeNode(root.val);
+        temp = temp.right;
+        dfs(root.right);
+    }
+    public TreeNode increasingBST(TreeNode root) {
+        dfs(root);
+        return head.right;
+    }
+}
