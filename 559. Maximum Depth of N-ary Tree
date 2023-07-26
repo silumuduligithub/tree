@@ -1,0 +1,19 @@
+class Solution {
+    public int maxDepth(Node root) {
+        if(root == null)return 0;
+        Queue<Node> que = new LinkedList<>();
+        que.add(root);
+        int count = 0;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                Node cur = que.remove();
+                for(Node nbr : cur.children){
+                    que.add(nbr);
+                }
+            }
+            count++;
+        }
+        return count;
+    }
+}
