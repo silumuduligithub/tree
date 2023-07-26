@@ -1,0 +1,43 @@
+class Solution {
+    class Pair{
+        TreeNode cur;
+        TreeNode parent;
+        int level;
+        Pair(TreeNode cur, TreeNode parent, int level){
+            this.cur = cur;
+            this.parent = parent;
+            this.level = level;
+        }
+    }
+    public boolean isCousins(TreeNode root, int x, int y) {
+        Queue<Pair> que = new LinkedList<>();
+        int parent = -11, level = 0, count = 1;
+        boolean flag= false;
+        que.add(new Pair(root, root, 0));
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                Pair cur = que.remove();
+                if(cur.cur.val == x || cur.cur.val == y){
+                    if(flag == false){
+                        flag = true;
+                        parent = cur.parent.val;
+                        level = count;
+                    }else{
+                        if(cur.parent.val != parent && count == level){
+                            return true;
+                        }
+                    }
+                }
+                if(cur.cur.left != null){
+                    que.add(new Pair(cur.cur.left, cur.cur, count));
+                }
+                if(cur.cur.right != null){
+                    que.add(new Pair(cur.cur.right, cur.cur, count));
+                }
+            }
+            count++;
+        }
+        return false;
+    }
+}
