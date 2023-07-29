@@ -1,0 +1,16 @@
+lass Solution {
+    public void dfs(TreeNode root, List<Integer> ans){
+        if(root == null)return;
+        ans.add(root.val);
+        dfs(root.left, ans);
+        dfs(root.right, ans);
+    }
+    public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
+        List<Integer> ans = new ArrayList<>();
+        if(root1 == null && root2 == null)return ans;
+        dfs(root1, ans);
+        dfs(root2, ans);
+        Collections.sort(ans);
+        return ans;
+    }
+}
