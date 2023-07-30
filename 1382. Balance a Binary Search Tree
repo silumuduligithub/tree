@@ -1,0 +1,22 @@
+class Solution {
+    public void dfs1(TreeNode root, List<Integer> al){
+        if(root == null)return;
+        dfs1(root.left, al);
+        al.add(root.val);
+        dfs1(root.right, al);
+    }
+    public TreeNode dfs2(List<Integer> al, int start, int end){
+        if(start > end)return null;
+        int mid = start + (end - start)/2;
+        TreeNode root = new TreeNode(al.get(mid));
+        root.left = dfs2(al, start, mid -1);
+        root.right = dfs2(al, mid + 1, end);
+        return root;
+    }
+    public TreeNode balanceBST(TreeNode root) {
+        if(root == null)return null;
+        List<Integer> al = new ArrayList<>();
+        dfs1(root, al);
+        return dfs2(al, 0, al.size() - 1);
+    }
+}
