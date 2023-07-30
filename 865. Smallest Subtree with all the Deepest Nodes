@@ -1,0 +1,17 @@
+class Solution {
+    public int calculetDepth(TreeNode root){
+        return root == null ? 0 : Math.max(calculetDepth(root.left), calculetDepth(root.right)) + 1;
+    }
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        if(root == null)return null;
+        int left = calculetDepth(root.left);
+        int right = calculetDepth(root.right);
+        if(left > right){
+            return subtreeWithAllDeepest(root.left);
+        }else if(right > left){
+            return subtreeWithAllDeepest(root.right);
+        }else {
+            return root;
+        }
+    }
+}
