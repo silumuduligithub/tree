@@ -1,0 +1,54 @@
+class Solution {
+     class Pair implements Comparable<Pair>{
+        int num;
+        int idx;
+        Pair(int num, int idx){
+            this.num = num;
+            this.idx = idx;
+        }
+        public int compareTo(Pair o){
+            return this.num - o.num;
+        }
+    }
+   public void swap(Pair[] pair, int i, int j){
+        Pair temp = pair[i];
+        pair[i]= pair[j];
+        pair[j]= temp;
+    }
+    public int minimumOperations(TreeNode root) {
+        if(root == null)return 0;
+        int count = 0;
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(root);
+        while(que.size() > 0){
+            int size = que.size();
+            int i = 0;
+            List<Pair> al = new ArrayList<>();
+            while(size-- > 0){
+                TreeNode cur = que.remove();
+                if(cur.left != null){
+                    al.add(new Pair(cur.left.val, i++));
+                    que.add(cur.left);
+                }
+                if(cur.right != null){
+                    al.add(new Pair(cur.right.val, i++));
+                    que.add(cur.right);
+                }
+            }
+            Pair[] arr = new Pair[al.size()];
+            for(int j = 0; j < arr.length; j++){
+                arr[j] = al.get(j);
+            }
+           Arrays.sort(arr);
+            for(int j = 0; j < al.size(); j++){
+                if(j == arr[j].idx)continue;
+                if(arr[j].idx != j){
+                    count++;
+                    swap(arr, j, arr[j].idx);
+                    j--;
+                }
+            }
+        }
+        return count;
+    }
+}
