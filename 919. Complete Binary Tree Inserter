@@ -1,0 +1,51 @@
+class CBTInserter {
+    Queue<TreeNode> que;
+    TreeNode head = null;
+    public CBTInserter(TreeNode root) {
+        que = new LinkedList<>();
+        head = root;
+        que.add(root);
+        while(que.size() > 0){
+            TreeNode cur = que.peek();
+            // if the node have left child then add that that child inside the queue
+           if(cur.left != null){
+            que.add(cur.left);
+            }
+            // if the node don't have any left child that means we need to insert a child in his left so just break the loop and insert a child
+            else{
+                break;
+            }
+            // if the node have right child then add that child inside queue
+            if(cur.right != null){
+                que.add(cur.right);
+            }
+            // if the node don't have any right child that means we need to insert a child from its right so break the loop
+            else{
+                break;
+            }
+            // if the node have both left child and right child that means we don't need that node, so remove that node
+            que.remove();
+        }
+    }
+    
+    public int insert(int val) {
+        int p = que.peek().val;
+        TreeNode node = new TreeNode(val);
+        // if the top element of que don't have null then we need to insert a child from its left but do not remove the parent because we need to insert a child from its right also but add that right child into que because infuture the left child can be a parent of another child 
+        if(que.peek().left == null){
+            que.peek().left = node;
+            que.add(que.peek().left);
+        }
+        // but when we are inserting a right child that means the tree both have left child and right child so remove the parent from the queue and add that right child into the queue for future use
+        else{
+            que.peek().right = node;
+            que.add(que.peek().right);
+            que.remove();
+        }
+        return p;
+    }
+    
+    public TreeNode get_root() {
+        return head;
+    }
+}
