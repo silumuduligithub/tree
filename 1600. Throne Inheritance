@@ -1,0 +1,37 @@
+class ThroneInheritance {
+    HashMap<String, List<String>> graph;
+    Set<String> set;
+    String root;
+    public ThroneInheritance(String kingName) {
+        graph = new HashMap<>();
+        set = new HashSet<>();
+        graph.put(kingName, new ArrayList<>());
+        root = kingName;
+    }
+    
+    public void birth(String parentName, String childName) {
+        List<String> childs = graph.getOrDefault(parentName, new ArrayList<>());
+        childs.add(childName);
+        graph.put(parentName, childs);
+        if(!graph.containsKey(parentName)){
+            graph.put(childName, new ArrayList<>());
+        }
+    }
+    
+    public void death(String name) {
+        set.add(name);
+    }
+    
+    public void dfs(String root, List<String> ans){
+        if(!set.contains(root))ans.add(root);
+        if(graph.get(root) == null)return;
+        for(String nbr : graph.get(root)){
+            dfs(nbr, ans);
+        }
+    }
+    public List<String> getInheritanceOrder() {
+        List<String> ans = new ArrayList<>();
+        dfs(root, ans);
+        return ans;
+    }
+}
