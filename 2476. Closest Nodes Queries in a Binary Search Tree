@@ -1,0 +1,50 @@
+lass Solution {
+    public void inOrder(TreeNode root, List<Integer> nodes){
+        if(root == null)return;
+        inOrder(root.left, nodes);
+        nodes.add(root.val);
+        inOrder(root.right, nodes);
+    }
+    public List<List<Integer>> binarySearch(List<Integer> nodes, List<Integer> query){
+        List<List<Integer>> ans = new ArrayList<>();
+        for(int i = 0; i < query.size(); i++){
+        int lo = 0, hi = nodes.size() - 1, min = -1, max = -1, ele = query.get(i);
+            List<Integer> al = new ArrayList<>();
+            while(lo <= hi){
+                int mid = (lo + hi) / 2;
+                if(nodes.get(mid) == ele){
+                    min = ele;
+                    break;
+                }else if(nodes.get(mid) < ele){
+                    min = nodes.get(mid);
+                    lo = mid + 1;
+                }else{
+                    hi = mid - 1;
+                }
+            }
+            al.add(min);
+            lo = 0;
+            hi = nodes.size() - 1;
+             while(lo <= hi){
+                int mid = (lo + hi) / 2;
+                if(nodes.get(mid) == ele){
+                    max = ele;
+                    break;
+                }else if(nodes.get(mid) > ele){
+                   max = nodes.get(mid);
+                    hi = mid - 1;
+                }else{
+                   lo = mid + 1;
+                }
+            }
+            al.add(max);
+            ans.add(new ArrayList<>(al));
+        }
+        return ans;
+    }
+    public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+        List<Integer> nodes = new ArrayList<>();
+        inOrder(root, nodes);
+        return binarySearch(nodes, queries);
+    }
+}
