@@ -1,0 +1,39 @@
+class Solution {
+    public boolean dfs(TreeNode root, int val, StringBuilder sb){
+        if(root == null)return false;
+        if(root.val == val)return true;
+        sb.append("L");
+        boolean left = dfs(root.left, val, sb);
+        if(left == true)return true;
+        sb.delete(sb.length() - 1, sb.length());
+        sb.append("R");
+        boolean right = dfs(root.right, val, sb);
+        if(right == true){
+            return true;
+        }
+        sb.delete(sb.length() - 1, sb.length());
+        return false;
+    }
+    public String getDirections(TreeNode root, int startValue, int destValue) {
+        if(root == null)return "";
+        StringBuilder rootToStart = new StringBuilder();
+        StringBuilder rootToDest = new StringBuilder();
+        dfs(root, startValue, rootToStart);
+        dfs(root, destValue, rootToDest);
+        int i = 0, j = 0;
+        while(i < rootToStart.length() && j < rootToDest.length()){
+            if(rootToStart.charAt(i) == rootToDest.charAt(j)){
+                i++;
+                j++;
+            }else{
+                break;
+            }
+        }
+        StringBuilder ans = new StringBuilder();
+        for(int t = i; t < rootToStart.length(); t++){
+            ans.append("U");
+        }
+        ans.append(rootToDest.substring(j, rootToDest.length()));
+        return ans.toString();
+    }
+}
