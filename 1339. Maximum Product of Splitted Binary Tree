@@ -1,0 +1,20 @@
+class Solution {
+    public long calculetSum(TreeNode root){
+        return root == null ? 0 : calculetSum(root.left) + calculetSum(root.right) + root.val;
+    }
+    long ans;
+    public long maximumProduct(TreeNode root, long totalSum){
+        if(root == null)return 0;
+        long leftSum = maximumProduct(root.left, totalSum);
+        long rightSum = maximumProduct(root.right, totalSum);
+        long subTreeSum = leftSum + rightSum + root.val;
+        ans = Math.max(subTreeSum * (totalSum - subTreeSum), ans);
+        return subTreeSum;
+    }
+    public int maxProduct(TreeNode root) {
+        long totalSum = calculetSum(root);
+        ans = 0;
+        maximumProduct(root, totalSum);
+        return(int)(ans % 1000000007);
+    }
+}
