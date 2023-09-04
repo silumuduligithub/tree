@@ -1,0 +1,20 @@
+class Solution {
+    public int searchInPost(int[] post,int pos, int poe, int val){
+        for(int i = pos; i <= poe; i++){
+            if(post[i] == val)return i;
+        }
+        return -1;
+    }
+    public TreeNode construct(int[] pre, int ps, int pe, int[] post, int pos, int poe){
+        if(ps > pe || pos > poe || ps >= pre.length)return null;
+        TreeNode root = new TreeNode(pre[ps]);
+        if(ps == pe || pos == poe)return root;
+        int idx = searchInPost(post, pos, poe, pre[ps + 1]);
+        root.left = construct(pre, ps + 1, ps + 1+ idx - pos, post, pos, idx);
+        root.right = construct(pre, ps + idx - pos + 2, pe, post, idx + 1, poe - 1);
+        return root;
+    }
+    public TreeNode constructFromPrePost(int[] preorder, int[] postorder) {
+        return construct(preorder, 0, preorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+}
