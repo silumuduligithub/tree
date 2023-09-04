@@ -1,0 +1,19 @@
+class Solution {
+    public List<Integer> pathInZigZagTree(int label) {
+        List<Integer> ans = new ArrayList<>();
+        int curLevel = 1, end = 0;
+        while(end < label){
+            end += curLevel;
+            curLevel *= 2;
+        }
+        curLevel /= 2;
+        while(label >= 1){
+            ans.add(0, label);
+            int compliment = (3 * curLevel) - label - 1;
+            int parent = compliment / 2;
+            label = parent;
+            curLevel /= 2;
+        }
+        return ans;
+    }
+}
