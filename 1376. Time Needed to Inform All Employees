@@ -1,0 +1,28 @@
+class Solution {
+    public HashMap<Integer, List<Integer>> constructGraph(int[] manager){
+        HashMap<Integer, List<Integer>> graph = new HashMap<>();
+        for(int i = 0; i < manager.length; i++){
+            if(!graph.containsKey(manager[i]))graph.put(manager[i], new ArrayList<>());
+            List<Integer> al = graph.get(manager[i]);
+            al.add(i);
+            graph.put(manager[i], al);
+        }
+        return graph;
+    }
+    int ans = 0, time = 0;
+    public void dfs(int manager, HashMap<Integer, List<Integer>> graph, int[] informTime){
+        ans = Math.max(ans, time);
+        if(graph.containsKey(manager)){
+            for(int nbr : graph.get(manager)){
+                time += informTime[manager];
+                dfs(nbr, graph, informTime);
+                time -= informTime[manager];
+            }
+        }
+    }
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        HashMap<Integer, List<Integer>> graph = constructGraph(manager);
+        dfs(headID, graph, informTime);
+        return ans;
+    }
+}
