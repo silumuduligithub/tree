@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    int ans = 0;
+    public int[] poTraversal(TreeNode root){
+        if(root == null){
+            return new int[]{Integer.MIN_VALUE, Integer.MAX_VALUE, 0};
+        }
+        int[] Left = poTraversal(root.left);
+        int[] Right = poTraversal(root.right);
+        if(Left == null || Right == null || Left[0] >= root.val || Right[1]  <= root.val)return null;
+        int min = Math.max(root.val, Math.max(Left[0], Right[0]));
+        int max = Math.min(root.val, Math.min(Right[1], Left[1]));
+        int sum = root.val + Left[2] + Right[2];
+        ans = Math.max(ans, sum);
+        return new int[]{min, max, sum};
+    }
+    public int maxSumBST(TreeNode root) {
+        poTraversal(root);
+        return ans;   
+    }
+}
