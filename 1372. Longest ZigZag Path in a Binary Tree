@@ -1,0 +1,27 @@
+class Solution {
+    class Pair{
+        int forwardSlop;
+        int backwardSlop;
+        int maxLength;
+        Pair(int forwardSlop, int backwardSlop, int maxLength){
+            this.forwardSlop = forwardSlop;
+            this.backwardSlop = backwardSlop;
+            this.maxLength = maxLength;
+        }
+    }
+    public Pair calculetLength(TreeNode root){
+        if(root == null){
+            return new Pair(0, 0, 0);
+        }
+        Pair left = calculetLength(root.left);
+        Pair right = calculetLength(root.right);
+        int maxLength = Math.max(Math.max(left.maxLength, right.maxLength), Math.max(left.backwardSlop, right.forwardSlop));
+        int maxForwardLeft = left.backwardSlop + 1;
+        int maxBackwardRight = right.forwardSlop + 1;
+        return new Pair(maxForwardLeft, maxBackwardRight, maxLength);  
+    }
+    public int longestZigZag(TreeNode root) {
+        Pair pair = calculetLength(root);
+        return pair.maxLength;
+    }
+}
