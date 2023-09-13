@@ -1,0 +1,62 @@
+class Solution {
+    int ans;
+    public List<List<Integer>> buildGraph(int[][] edges, int n){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        return graph;
+    }
+    public Queue<Integer> removeUnusedLeafs(int[] coins, List<List<Integer>> graph){
+        Queue<Integer> leafNodeWithCoins = new LinkedList<>();
+        Queue<Integer> leafNodes = new LinkedList <>();
+
+        for(int i = 0; i < coins.length; i++){
+            if(graph.get(i).size() == 1){
+                leafNodes.add(i);
+            }
+        }
+        while(leafNodes.size() > 0){
+            int i = leafNodes.remove();
+            if(coins[i] != 0){
+                leafNodeWithCoins.add(i);
+                continue;
+            }
+            ans--;
+            if(graph.get(i).size() == 1){
+                int node = graph.get(i).get(0);
+                graph.get(i).remove(Integer.valueOf(node));
+                graph.get(node).remove(Integer.valueOf(i));
+                if(graph.get(node).size() == 1){
+                    leafNodes.add(node);
+                }   
+            }
+        }
+        return leafNodeWithCoins;
+    }
+    public int collectTheCoins(int[] coins, int[][] edges) {
+        ans = coins.length;
+        List<List<Integer>> graph = buildGraph(edges, coins.length);
+        Queue<Integer> leafNodeWithCoins = removeUnusedLeafs(coins, graph);
+        for(int i = 0; i < 2; i++){
+            int size = leafNodeWithCoins.size();
+            while(size-- > 0){
+                int node = leafNodeWithCoins.remove();
+                ans--;
+                if(graph.get(node).size() == 1){
+                    int nbr = graph.get(node).get(0);
+                    graph.get(node).remove(Integer.valueOf(nbr));
+                    graph.get(nbr).remove(Integer.valueOf(node));
+                    if(graph.get(nbr).size() == 1){
+                        leafNodeWithCoins.add(nbr);
+                    }   
+                }
+            }
+        }
+        return ans == 0 ? 0 : (ans - 1) * 2;
+    }
+}
