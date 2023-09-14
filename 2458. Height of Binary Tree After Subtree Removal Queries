@@ -1,0 +1,29 @@
+class Solution {
+    HashMap<Integer, Integer> leftHeight = new HashMap<>();
+    HashMap<Integer, Integer> rightHeight = new HashMap<>();
+    HashMap<Integer, Integer> queryAns = new HashMap<>();
+    public int calculetHeight(TreeNode root){
+        if(root == null)return 0;
+        int left = calculetHeight(root.left);
+        int right = calculetHeight(root.right);
+        leftHeight.put(root.val, left);
+        rightHeight.put(root.val, right);
+        return Math.max(left, right) + 1;
+    }
+    public void helper(TreeNode root, int maxHeight, int depth){
+        if(root == null)return;
+        queryAns.put(root.val, maxHeight);
+        helper(root.left, Math.max(maxHeight, rightHeight.get(root.val) + depth), depth + 1);
+        helper(root.right, Math.max(maxHeight, leftHeight.get(root.val) + depth), depth + 1);
+    }
+    public int[] treeQueries(TreeNode root, int[] queries) {
+        calculetHeight(root);
+        helper(root.left, rightHeight.get(root.val), 1);
+        helper(root.right, leftHeight.get(root.val), 1);
+        int[] ans = new int[queries.length];
+        for(int i = 0; i < ans.length; i++){
+            ans[i] = queryAns.get(queries[i]);
+        }
+        return ans;
+    }
+}
