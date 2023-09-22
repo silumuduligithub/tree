@@ -1,0 +1,49 @@
+class Solution {
+    class Pair{
+        int node;
+        char value;
+        Pair(int node, char value){
+            this.node = node;
+            this.value = value;
+        }
+    }
+    public List<List<Pair>> constructGraph(List<Integer> parent, String str){
+        List<List<Pair>> graph = new ArrayList<>();
+        for(int i = 0; i < str.length(); i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int i = 1; i < parent.size(); i++){
+            graph.get(parent.get(i)).add(new Pair(i, str.charAt(i)));
+            graph.get(i).add(new Pair(parent.get(i), str.charAt(parent.get(i))));
+        }
+        return graph;
+    }
+    Map<Long, Long> map;
+    public void dfs(int cur, int parent, long path, List<List<Pair>> graph){
+        map.put(path, map.getOrDefault(path, 0l) + 1);
+        for(Pair nbr : graph.get(cur)){
+            if(nbr.node != parent){
+                int ch =  nbr.value - 'a';
+                path ^= (1 << ch);
+                dfs(nbr.node, cur, path, graph);
+                path ^=(1 << ch);
+            }
+        }
+    }
+    public long countPalindromePaths(List<Integer> parent, String s) {
+        map = new HashMap<>();
+        List<List<Pair>>graph = constructGraph(parent, s);
+        dfs(0, -1, 0, graph);
+        long res = 0;
+        for(long key : map.keySet()){
+            for(int j = 0; j < 26; j++){
+                long other = key ^ (1 << j);
+                if(map.containsKey(other)){
+                    res += map.get(key) * map.get(other);
+                }
+            }
+            res += map.get(key) * (map.get(key) - 1);
+        }
+        return res / 2;
+    }
+}
