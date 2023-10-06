@@ -1,0 +1,32 @@
+class Solution {
+    public TreeNode recoverFromPreorder(String traversal) {
+        Stack<TreeNode> st = new Stack<>();
+        for(int i = 0; i < traversal.length(); i++){
+            int level = 0;
+            while(traversal.charAt(i) == '-'){
+                i++;
+                level++;
+            }
+            int nodeValue = 0;
+            while(i < traversal.length() && traversal.charAt(i) != '-'){
+               System.out.println(i);
+                nodeValue = nodeValue * 10 + (traversal.charAt(i) - '0');
+                i++;
+            }
+            i--;
+            TreeNode node = new TreeNode(nodeValue);
+            while(st.size() > level)st.pop();
+            if(st.size() > 0){
+                if(st.peek().left == null){
+                    st.peek().left = node;
+                }else{
+                    st.peek().right = node;
+                }
+            }
+            st.push(node);
+
+        }
+        while(st.size() > 1)st.pop();
+        return st.pop();
+    }
+}
