@@ -1,0 +1,91 @@
+//step1 : first we need to create a graph from the edges
+// seep2 : then we need to find out which node have same value and store that in a map
+// step3 : creae a active array of boolean type
+// step2 : tharvers the valueToNode map in asending order and connect the nodes which have same value
+
+class Dsu{
+    int[] parent, rank;
+    Dsu(int n){
+        rank = new int[n];
+        parent = new int[n];
+        for(int i = 0; i < n; i++){
+            parent[i] = i;
+        }
+    }
+    public int findParent(int u){
+        if(u == parent[u])return u ;
+        return parent[u] = findParent(parent[u]);
+    }
+    public void unionByRank(int u, int v){
+        int alp_u = findParent(u);
+        int alp_v = findParent(v);
+        if(alp_u == alp_v)return;
+        if(rank[alp_u] < rank[alp_v]){
+            parent[alp_u] = alp_v;
+        }else if(rank[alp_v] < rank[alp_u]){
+            parent[alp_v] = alp_u;
+        }else{
+            parent[alp_v] = alp_u;
+            rank[alp_u]++;
+        }
+    }
+}
+class Solution {
+    public List<List<Integer>> constructGraph(int[][] edges,int n){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        return graph;
+    }
+    public int generateCurAns(List<Integer> sameValueNodes, Dsu dsu){
+        List<Integer> allParents = new ArrayList<>();
+        for(int node : sameValueNodes){
+            int parentNode = dsu.findParent(node);
+            allParents.add(parentNode);
+        }
+        Collections.sort(allParents);
+        int curAns = 0;
+        for(int i = 0; i < allParents.size(); i++){
+            int count = 0;
+            int curParent = allParents.get(i);
+            while(i < allParents.size() && curParent == allParents.get(i)){
+                count++;
+                i++;
+            }
+            i--;
+            curAns = curAns + (count * (count - 1) / 2);
+        }
+        return curAns;
+    }
+    public int numberOfGoodPaths(int[] vals, int[][] edges) {
+        Dsu dsu = new Dsu(vals.length);
+        List<List<Integer>> graph = constructGraph(edges, vals.length);
+        TreeMap<Integer, List<Integer>> nodesToEdges = new TreeMap<>();
+        for(int i = 0; i < vals.length; i++){
+            List<Integer> al = nodesToEdges.getOrDefault(vals[i], new ArrayList<>()); 
+            al.add(i);
+            nodesToEdges.put(vals[i], al);
+        }
+        boolean[] activeArr = new boolean[vals.length];
+        int ans = vals.length;
+        for(int key : nodesToEdges.keySet()){
+            List<Integer> sameValueNodes = nodesToEdges.get(key);
+            for(int node : sameValueNodes){
+                for(int graphNode : graph.get(node)){
+                    if(activeArr[graphNode]){
+                        dsu.unionByRank(node, graphNode);
+                    }
+                }
+                activeArr[node] = true;
+            }
+            int curAns = generateCurAns(sameValueNodes, dsu);
+            ans += curAns;
+        }
+        return ans;
+    }
+}
