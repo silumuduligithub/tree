@@ -1,0 +1,45 @@
+class Solution {
+    public List<List<Integer>> constructGraph(int n, int[][] edges, int[] indegree){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            indegree[edge[0]]++;
+            indegree[edge[1]]++;
+        }
+        return graph;
+    }
+    public int maxKDivisibleComponents(int n, int[][] edges, int[] value, int k) {
+        int[] indegree = new int[n];
+        long[] values = Arrays.stream(value).mapToLong(i -> i).toArray();
+        List<List<Integer>> graph = constructGraph(n, edges, indegree);
+        Queue<Integer> que = new LinkedList<>();
+        for(int i = 0; i < n; i++){
+            if(indegree[i] == 0 || indegree[i] == 1)que.add(i);
+        }
+        int count = 0;
+        while(que.size() > 0){
+            int size = que.size();
+            while(size-- > 0){
+                int cur = que.remove();
+                indegree[cur] = 0;
+                if(values[cur] % k == 0){
+                    count++;
+                }
+                for(int nbr : graph.get(cur)){
+                    if(indegree[nbr] != 0){
+                        values[nbr] += values[cur];
+                        indegree[nbr]--;
+                        if(indegree[nbr] == 1){
+                            que.add(nbr);
+                        }  
+                    }
+                }
+            }
+        }
+        return count;
+    }
+}
