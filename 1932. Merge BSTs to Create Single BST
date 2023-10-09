@@ -1,0 +1,64 @@
+class Solution {
+    // public TreeNode findRoot(List<TreeNode> trees){
+    //     for(int i = 0; i < trees.size(); i++){
+    //         boolean flag = false;
+    //         TreeNode curNode = trees.get(i);
+    //         for(int j = 0; j < trees.size(); j++){
+    //             if(j != i){
+    //                 TreeNode next = trees.get(j);
+    //                 if(next.left != null && next.left.val == curNode.val){
+    //                     flag = true;
+    //                     break;
+    //                 }
+    //                 if(next.right != null && next.right.val == curNode.val){
+    //                     flag = true;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //         if(flag == false)return curNode;
+    //     }
+    //     return null;
+    // }
+    public TreeNode findRoot(List<TreeNode> trees){
+        Set<Integer> set = new HashSet<>();
+        for(TreeNode node : trees){
+            if(node.left != null)set.add(node.left.val);
+            if(node.right != null)set.add(node.right.val);
+        }
+        for(TreeNode node : trees){
+            if(!set.contains(node.val)){
+                return node;
+            }
+        }
+        return null;
+    }
+    public boolean constructTree(TreeNode root, HashMap<Integer, TreeNode> map, Integer min, Integer max){
+        if(root == null)return true;
+        if(root.val <= min || root.val >= max)return false;
+        if(root.left == null && root.right == null){
+            if(map.containsKey(root.val) && root != map.get(root.val)){
+                TreeNode next = map.get(root.val);
+                root.left = next.left;
+                root.right = next.right;
+                map.remove(root.val);
+            }
+        }
+        return constructTree(root.left, map, min, root.val) && constructTree(root.right, map, root.val, max);
+    }
+    public TreeNode canMerge(List<TreeNode> trees) {
+        if(trees.size() == 0)return null;
+        TreeNode root = findRoot(trees);
+        if(root == null)return null;
+        // store the root nodes with value inside a hashmap;
+        HashMap<Integer, TreeNode> map = new HashMap<>();
+        for(TreeNode eachRoot : trees){
+            map.put(eachRoot.val, eachRoot);
+        }
+        if(constructTree(root, map, Integer.MIN_VALUE, Integer.MAX_VALUE)){
+            if(map.size() > 1)return null;
+            return root;
+        }
+        return null;
+    }
+}
