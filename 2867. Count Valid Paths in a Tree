@@ -1,0 +1,78 @@
+class Dsu{
+    int[] parent, size;
+    Dsu(int n){
+        parent = new int[n + 1];
+        size = new int[n + 1];
+        for(int i = 0; i <= n; i++){
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+    public int findParent(int u){
+        if(parent[u] == u){
+            return u;
+        }
+        return parent[u] = findParent(parent[u]);
+    }
+    public void unionBySize(int u, int v){
+        int alp_u = findParent(u);
+        int alp_v = findParent(v);
+        if(alp_v == alp_u) return;
+        if(size[alp_u] < size[alp_v]){
+            parent[alp_u] = alp_v;
+            size[alp_v] += size[alp_u];
+        }else{
+            parent[alp_v] = alp_u;
+            size[alp_u] += size[alp_v];
+        }
+    }
+}
+class Solution {
+   public void isPrime(int num, boolean[] dp){
+        Arrays.fill(dp, true);
+        for(int i = 2; i * i < num; i++){
+            if(!dp[i])continue;
+            for(int j = i * i; j < num; j += i){
+                dp[j] = false;
+            }
+        }
+        dp[1] = false;
+    }
+    public List<List<Integer>> constructGraph(int[][] edges, int n, Dsu dsu, boolean[] dp){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i <= n; i++){
+            graph.add(new ArrayList<>());
+        }
+        for(int[] edge : edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            if(dp[edge[0]] || dp[edge[1]])continue;
+            dsu.unionBySize(edge[0], edge[1]);
+        }
+        return graph;
+    }
+    public long countPaths(int n, int[][] edges) {
+        Dsu dsu = new Dsu(n);
+        boolean[] dp = new boolean[n + 1];
+        isPrime(n +1, dp);
+        for(int i = 0; i <= n; i++)System.out.print(dp[i]+" ");
+        List<List<Integer>> graph = constructGraph(edges, n, dsu, dp);
+        long ans = 0;
+        for(int i = 1; i <= n; i++){
+            if(!dp[i])continue;
+            List<Integer> childs = new ArrayList<>();
+            long sum = 1;
+            for(int nbr : graph.get(i)){
+                if(dp[nbr])continue;
+                int size = dsu.size[dsu.findParent(nbr)];
+                childs.add(size);
+                sum += size;
+            }
+            for(int j = 0; j < childs.size(); j++){
+                sum -= childs.get(j);
+                ans += sum * childs.get(j);
+            }
+        }
+        return ans;
+    }
+}
