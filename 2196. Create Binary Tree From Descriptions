@@ -1,0 +1,57 @@
+class Solution {
+    public TreeNode findRoot(int[][] descriptions){
+        Set<Integer> childs = new HashSet<>();
+        for(int i = 0; i < descriptions.length; i++){
+            childs.add(descriptions[i][1]);
+        }
+        for(int i = 0; i < descriptions.length; i++){
+           if(!childs.contains(descriptions[i][0]))return new TreeNode(descriptions[i][0]);
+        }
+        return null;
+    }
+    public TreeNode createBinaryTree(int[][] descriptions) {
+        TreeNode root = findRoot(descriptions);
+        if(root == null)return null;
+        HashMap<Integer, TreeNode> map = new HashMap<>();
+        map.put(root.val, root);
+        for(int[] description : descriptions){
+           if(map.containsKey(description[0])){
+               TreeNode curRoot = map.get(description[0]);
+               if(map.containsKey(description[1])){
+                   if(description[2] == 1){
+                       curRoot.left = map.get(description[1]);
+                   }else{
+                      curRoot.right = map.get(description[1]);
+                   }
+               }else{
+                   TreeNode leaf = new TreeNode(description[1]);
+                   map.put(leaf.val, leaf);
+                   if(description[2] == 1){
+                       curRoot.left = leaf;
+                   }else{
+                      curRoot.right = leaf;
+                   }
+               }
+           }else{
+               TreeNode curRoot = new TreeNode(description[0]);
+               map.put(curRoot.val, curRoot);
+                if(map.containsKey(description[1])){
+                   if(description[2] == 1){
+                       curRoot.left = map.get(description[1]);
+                   }else{
+                        curRoot.right = map.get(description[1]);   
+                   }
+               }else{
+                   TreeNode leaf = new TreeNode(description[1]);
+                   map.put(leaf.val, leaf);
+                   if(description[2] == 1){
+                       curRoot.left = leaf;
+                   }else{
+                      curRoot.right = leaf;
+                   }
+               }
+           }
+        }
+        return root;
+    }
+}
