@@ -1,0 +1,61 @@
+class LockingTree {
+    List<Integer> al;
+    HashMap<Integer, Integer> map;
+    List<List<Integer>> graph;
+    public LockingTree(int[] parent) {
+        int n = parent.length;
+        al = new ArrayList<>();
+        map = new HashMap<>();
+        graph = new ArrayList<>();
+        for(int p : parent){
+            al.add(p);
+        }
+        for(int i = 0; i < n; i++)graph.add(new ArrayList<>());
+        for(int i = 1; i < n; i++){
+            graph.get(parent[i]).add(i);
+        }
+    }
+    
+    public boolean lock(int num, int user) {
+        if(map.containsKey(num))return false;
+        map.put(num, user);
+        return true;
+    }
+    
+    public boolean unlock(int num, int user) {
+        if(map.containsKey(num) && map.get(num) == user){
+            map.remove(num);
+            return true;
+        }
+        return false;
+    }
+    public boolean dfs(int cur){
+        for(int nbr : graph.get(cur)){
+             if(dfs(nbr))return true;
+        }
+        if(map.containsKey(cur)) return true;
+        return false;
+    }
+    public void dfs1(int cur){
+        if(map.containsKey(cur))map.remove(cur);
+        for(int nbr : graph.get(cur)){
+            dfs1(nbr);
+        }
+    }
+    public boolean upgrade(int num, int user) {
+        // check weather it have any any locked ancestors // in this also we are checking weather it is locked or not
+        int flag = num;
+        while(num != -1){
+            if(map.containsKey(num)){
+                return false;
+            }
+            num = al.get(num);
+        }
+        num = flag;
+        if(dfs(num) == false)return false;
+        dfs1(num);
+        map.put(num, user);
+        // if we are here that means we need to check weather it has atleast one locked descendant
+        return true;
+    }
+}
