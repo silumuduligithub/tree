@@ -1,0 +1,41 @@
+class Solution {
+    long mod = (long) 1000000000 + 7;
+    public long[][] createNCR(int[] nums){
+        int n = nums.length;
+        long[][] ncrTable = new long[n + 1][n + 1];
+        for(long[] ncr : ncrTable){
+            Arrays.fill(ncr, 1);
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j < i; j++){
+                // caculet ncr using formula
+                ncrTable[i][j] = (ncrTable[i - 1][j - 1] + ncrTable[i - 1][j]) % mod;
+            }
+        }
+        return ncrTable;
+    }
+    public long dfs(List<Integer> list, long[][] dp){
+        if(list.size() <= 2)return 1;
+        List<Integer> left = new ArrayList<>();
+        List<Integer> right = new ArrayList<>();
+        for(int i = 1; i < list.size(); i++){
+            if(list.get(i) < list.get(0)){
+                left.add(list.get(i));
+            }else{
+                right.add(list.get(i));
+            }
+        }
+        long left_res = dfs(left, dp) % mod;
+        long right_res  = dfs(right, dp) % mod;
+        return ((((dp[list.size() - 1][left.size()] % mod) * left_res)% mod) * right_res) % mod;
+    }
+    public int numOfWays(int[] nums) {
+        long[][] ncrTable = createNCR(nums);
+        List<Integer> list = new ArrayList<>();
+        for(int i = 0; i < nums.length; i++){
+            list.add(nums[i]);
+        }
+        long ans = dfs(list, ncrTable);
+        return (int)(((ans % mod) - 1) % mod);
+    }
+}
