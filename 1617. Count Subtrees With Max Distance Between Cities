@@ -1,0 +1,55 @@
+class Solution {
+    public int helper(int subTree, int[][] dist){
+        int nodeCount = 0, edgeCount = 0, maxDist = 0;
+        for(int i = 0; i < dist.length; i++){
+            // if that node is not exist just continue;
+            if(((subTree >> i) & 1) == 0)continue;
+            nodeCount++;
+            for(int j = i + 1; j < dist.length; j++){
+                // here also check is that node is exist or not
+                if(((subTree >> j) & 1) == 0)continue;
+                // if there exist an edge that means the minimum dist the should have one 
+                if(dist[i][j] == 1){
+                    edgeCount++;
+                }
+                maxDist = Math.max(maxDist, dist[i][j]);
+            }
+        }
+        // letes check is this a subTreeOrNot
+        if(nodeCount == edgeCount + 1){
+            return maxDist;
+        }
+        return 0;
+    }
+    public int[] countSubgraphsForEachDiameter(int n, int[][] edges) {
+        int[][] dist = new int[n][n];
+        // bydefalt all the nodes have no minimum dist
+        for(int[] d : dist){
+            Arrays.fill(d, (int)(1e9));
+        }
+        // here we are creating the minimum dist if that node is not going by any node;
+        for(int[] edge : edges){
+            dist[edge[0] - 1][edge[1] - 1] = 1;
+            dist[edge[1] - 1][edge[0] - 1] = 1;
+        }
+        // lets implement floyed warshell algorithm 
+        for(int k = 0; k < n; k++){
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    // because the tree is bydirectional
+                    dist[i][j] = dist[j][i] = Math.min(dist[i][j], Math.min(dist[j][i], dist[i][k] + dist[k][j]));
+                }
+            }
+        }
+
+        // jeneraly if there are n nodes that means there are 2^n subtreess
+        int[] ans = new int[n - 1];
+        for(int i = 0; i < (1 << n); i++){
+            int count = helper(i, dist);
+            if(count > 0){
+                ans[count - 1]++;
+            }
+        }
+        return ans;
+    }
+}
