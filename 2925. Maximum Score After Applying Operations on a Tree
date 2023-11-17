@@ -1,0 +1,35 @@
+class Solution {
+    // if isTaken == 1 that means you have taken something if it is 0 that means have not taken anything till now;
+    public List<List<Integer>> constructGraph(int[][] edges, int n){
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i = 0; i < n; i++)graph.add(new ArrayList<>());
+        for(int[] edge : edges){
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        return graph;
+    }
+    public long helper(int curNode, int parent, int curState, List<List<Integer>> graph,Long[][] dp, int[] val){
+        if(graph.get(curNode).size() == 1 && curNode != 0){
+            return curState == 1 ? val[curNode] : 0;
+        }
+        if(dp[curNode][curState] != null)return dp[curNode][curState];
+        long withNode = val[curNode];
+        for(int nbr : graph.get(curNode)){
+            if(nbr != parent){
+                withNode += helper(nbr, curNode, curState, graph, dp, val);
+            }
+        }
+        long withoutNode = 0;
+        for(int nbr : graph.get(curNode)){
+            if(nbr != parent){
+                withoutNode += helper(nbr, curNode, 1, graph, dp, val);
+            }
+        }
+        return dp[curNode][curState] = Math.max(withoutNode, withNode);
+    }
+    public long maximumScoreAfterOperations(int[][] edges, int[] values) {
+        List<List<Integer>> graph = constructGraph(edges, values.length);
+        return helper(0, -1, 0, graph, new Long[values.length][2], values);
+    }
+}
